@@ -1,0 +1,8 @@
+version: '2.2'
+services:
+  vuln:
+    build:
+      context: .
+      dockerfile: Dockerfile-novuln
+    ports:
+      - 5000:5000

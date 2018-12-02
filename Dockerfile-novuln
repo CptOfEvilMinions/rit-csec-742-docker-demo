@@ -1,0 +1,14 @@
+FROM golang:alpine AS build-env
+
+# Copy GO src
+COPY src $GOPATH/src/mypackage/myapp/
+WORKDIR $GOPATH/src/mypackage/myapp/
+
+# Statically compile GO binary
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-w -s" -o /go/bin/go_http_server
+
+FROM scratch
+COPY --from=build-env /go/bin/go_http_server /go/bin/go_http_server
+EXPOSE 5000
+ENTRYPOINT ["/go/bin/go_http_server"]
+
